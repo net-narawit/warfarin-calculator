@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Warfarin Dose Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+        }
         .pill { width: 24px; height: 24px; border-radius: 9999px; display: inline-block; margin: 2px; }
         .pill-2 { background-color: orange; }
         .pill-3 { background-color: skyblue; }
@@ -22,6 +28,20 @@
 <body class="bg-gray-100 p-6 font-sans">
     <div class="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
         <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">โปรแกรมคำนวณขนาดยา Warfarin</h1>
+        
+        <h2 class="text-xl font-bold mb-4 text-center text-gray-800">คำแนะนำในการปรับขนาดยา Warfarin</h2>
+        <div class="max-w-4xl mx-auto mb-6">
+            <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%;
+             padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden;
+             border-radius: 8px; will-change: transform;">
+              <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+                src="https://www.canva.com/design/DAGr4hxyiRI/T8PUUZhf8fgNkFF_EU0iPQ/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+              </iframe>
+            </div>
+            <a href="https://www.canva.com/design/DAGr4hxyiRI/T8PUUZhf8fgNkFF_EU0iPQ/view?utm_content=DAGr4hxyiRI&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" rel="noopener" class="block text-center text-xs text-gray-500 mt-2 hover:text-blue-600">Design by Narawit Kamyuang</a>
+        </div>
+
+        <hr class="my-6 border-gray-300">
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
@@ -33,47 +53,41 @@
                 <input type="number" id="weeklyDoseInput" class="w-full border border-gray-300 px-3 py-2 rounded-lg bg-orange-100 focus:outline-none focus:ring-2 focus:ring-orange-500" step="0.1" min="0">
             </div>
             <div class="flex items-center pt-4 md:pt-0">
-                <input type="checkbox" id="allowHalf" checked class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+                <input type="checkbox" id="allowHalf" checked class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 accent-orange-500">
                 <label for="allowHalf" class="ml-2 text-gray-700 text-sm font-bold">ให้ใช้ *ครึ่ง* เม็ด</label>
             </div>
         </div>
+        
+        <div id="adjustmentTable" class="my-4"></div>
+        <div id="percentageChange" class="text-center text-2xl my-4" aria-live="polite"></div>
 
         <hr class="my-6 border-gray-300">
-
-        <h2 class="text-xl font-bold mb-4 text-center text-gray-800">คำนวณจำนวนวันนัด</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <div>
-                <label for="startDate" class="block text-gray-700 text-sm font-bold mb-2">วันที่ปัจจุบัน:</label>
-                <input type="date" id="startDate" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div>
-                <label for="endDate" class="block text-gray-700 text-sm font-bold mb-2">วันนัด:</label>
-                <input type="date" id="endDate" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div class="flex items-end">
-                <button id="calculateDaysBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg w-full hover:bg-green-700 transition duration-150 ease-in-out shadow-md">คำนวณวัน</button>
-            </div>
+        
+        <div class="flex items-center justify-center">
+            <input type="checkbox" id="appointmentToggle" class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 accent-orange-500">
+            <label for="appointmentToggle" class="ml-2 text-gray-800 font-bold">คำนวณจำนวนยาตามนัด</label>
         </div>
-        <div id="daysResult" class="text-center text-lg font-semibold mb-4 text-gray-700" aria-live="polite"></div>
-
-        <hr class="my-6 border-gray-300">
-
-        <h2 class="text-xl font-bold mb-4 text-center text-gray-800">คำแนะนำในการปรับขนาดยา Warfarin</h2>
-        <div class="max-w-4xl mx-auto mb-6">
-             <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%;
-              padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden;
-              border-radius: 8px; will-change: transform;">
-               <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
-                 src="https://www.canva.com/design/DAGrz13pCOQ/cqIz_Jfv6ID-ndYLVrqmxA/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
-               </iframe>
-             </div>
-             <a href="https://www.canva.com/design/DAGrz13pCOQ/cqIz_Jfv6ID-ndYLVrqmxA/view?utm_content=DAGrz13pCOQ&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" rel="noopener" class="block text-center text-xs text-gray-500 mt-2 hover:text-blue-600">ตารางปรับยาแบบใหม่ by uthai netflix</a>
+        <p class="text-center text-xs text-gray-500 mt-1">*ไม่ระบุจะคำนวณยาที่ใช้ใน 1 สัปดาห์</p>
+        
+        <div id="appointmentFields" class="hidden mt-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="startDate" class="block text-gray-700 text-sm font-bold mb-2">วันที่เริ่มต้น (วันที่มา):</label>
+                    <input type="date" id="startDate" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="endDate" class="block text-gray-700 text-sm font-bold mb-2">วันนัดครั้งถัดไป:</label>
+                    <input type="date" id="endDate" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+            <div id="daysResult" class="text-center text-lg font-semibold mb-4 text-gray-700" aria-live="polite"></div>
         </div>
         
-        <div id="adjustmentTable" class="mb-4"></div>
-        <button id="showBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg mb-4 w-full md:w-auto hover:bg-blue-700 transition duration-150 ease-in-out shadow-md">แสดงตัวเลือกสำหรับยาที่กรอกเอง</button>
-        <div id="percentageChange" class="text-center text-2xl mb-4" aria-live="polite"></div>
-        <div id="result" class="space-y-4" aria-live="polite"></div>
+        <div class="flex justify-center mt-6">
+            <button id="showBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg mb-4 w-full md:w-auto hover:bg-blue-700 transition duration-150 ease-in-out shadow-md">แสดงตัวเลือก</button>
+        </div>
+
+        <div id="result" class="space-y-4 mt-6" aria-live="polite"></div>
     </div>
 
     <script>
@@ -81,7 +95,7 @@
         const daysName = ['จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.'];
         const DOSE_MULTIPLIER_LIMIT = 2.5; // Special dose not exceed 2.5 times normal dose
         const ABSOLUTE_MAX_DAILY_DOSE = 15; // Absolute maximum daily dose
-        const FLOAT_TOLERANCE = 0.01; // Tolerance for floating point comparisons (e.g., 1.0 vs 1.0000000000000001)
+        const FLOAT_TOLERANCE = 0.01; // Tolerance for floating point comparisons
 
         /**
          * Generates and displays interactive buttons for dose adjustment.
@@ -90,20 +104,18 @@
             const prev = parseFloat(document.getElementById('previousDoseInput').value);
             const adjustmentTableDiv = document.getElementById('adjustmentTable');
 
-            if (isNaN(prev) || prev <= 0) { // Check for NaN or non-positive value
+            if (isNaN(prev) || prev <= 0) {
                 adjustmentTableDiv.innerHTML = '';
                 return;
             }
             
-            // Add a title for the adjustment section
-            adjustmentTableDiv.innerHTML = '<h3 class="text-lg font-semibold mb-3 text-center text-gray-700">ปรับขนาดยาอัตโนมัติ (คลิกเพื่อเลือก)</h3>';
+            adjustmentTableDiv.innerHTML = '<h3 class="text-lg font-semibold mb-3 text-center text-gray-700">ปรับขนาดยาอัตโนมัติ <span class="text-sm font-normal">🖱️ (คลิกเพื่อเลือก)</span></h3>';
 
             const percentages = [-20, -15, -10, -5, 0, 5, 10, 15, 20];
             let buttonsHtml = '<div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2 text-center">';
 
             percentages.forEach(p => {
                 const exactDose = prev * (1 + p / 100);
-                // Round to the nearest 0.5
                 const roundedDose = Math.round(exactDose * 2) / 2;
                 const buttonColor = p < 0 ? 'bg-red-100 hover:bg-red-200 text-red-800' : (p === 0 ? 'bg-blue-100 hover:bg-blue-200 text-blue-800' : 'bg-green-100 hover:bg-green-200 text-green-800');
 
@@ -117,43 +129,29 @@
                 `;
             });
             buttonsHtml += '</div>';
-
-            // Append the buttons to the div
             adjustmentTableDiv.innerHTML += buttonsHtml;
         }
 
         /**
          * Sets the weekly dose input and triggers the suggestion generation.
-         * @param {number} dose - The dose to set.
          */
         function setWeeklyDoseAndSuggest(dose) {
-            const weeklyDoseInput = document.getElementById('weeklyDoseInput');
-            weeklyDoseInput.value = dose.toFixed(1); // Set value with one decimal place for consistency
-            generateSuggestions(); // Automatically generate and show new options
+            document.getElementById('weeklyDoseInput').value = dose.toFixed(1);
+            displayPercentageChange();
+            generateSuggestions();
         }
-
+        
         /**
-         * Generates and displays suggestions for Warfarin dosage based on weekly dose input.
+         * Displays the percentage change between previous and new dose.
          */
-        function generateSuggestions() {
-            console.log("--- Starting generateSuggestions ---");
+        function displayPercentageChange() {
             const weeklyDose = parseFloat(document.getElementById('weeklyDoseInput').value);
             const previousDose = parseFloat(document.getElementById('previousDoseInput').value);
-            const allowHalf = document.getElementById('allowHalf').checked;
-            const resultDiv = document.getElementById('result');
             const percentageChangeDiv = document.getElementById('percentageChange');
-
-            resultDiv.innerHTML = '';
-            percentageChangeDiv.innerHTML = '';
-
-            if (isNaN(weeklyDose) || weeklyDose <= 0) {
-                resultDiv.innerHTML = '<div class="text-red-600 text-center font-bold">กรุณากรอกขนาดยาใหม่ที่ถูกต้อง (มากกว่า 0)</div>';
-                console.log("Invalid weekly dose input.");
-                return;
-            }
-
-            // Display percentage change if previous dose is available
-            if (!isNaN(previousDose) && previousDose > 0) {
+            
+            percentageChangeDiv.innerHTML = ''; // Clear previous
+            
+            if (!isNaN(weeklyDose) && !isNaN(previousDose) && previousDose > 0) {
                 const pctChange = ((weeklyDose - previousDose) / previousDose * 100).toFixed(1);
                 const arrow = pctChange > 0 ? '▲' : (pctChange < 0 ? '▼' : '');
                 const color = pctChange > 0 ? 'text-green-600' : (pctChange < 0 ? 'text-red-600' : 'text-gray-800');
@@ -161,414 +159,188 @@
                                <span class="${color} text-2xl font-bold">${arrow}</span>
                                <span class="text-gray-800">${Math.abs(pctChange)}%</span>`;
             }
+        }
 
-            // Calculate days until appointment
-            const startDateInput = document.getElementById('startDate').value;
-            const endDateInput = document.getElementById('endDate').value;
-            let daysUntilAppointment = 0;
+        /**
+         * Generates and displays suggestions for Warfarin dosage.
+         */
+        function generateSuggestions() {
+            const weeklyDose = parseFloat(document.getElementById('weeklyDoseInput').value);
+            const allowHalf = document.getElementById('allowHalf').checked;
+            const resultDiv = document.getElementById('result');
 
-            if (startDateInput && endDateInput) {
-                const startDate = new Date(startDateInput);
-                const endDate = new Date(endDateInput);
-                startDate.setHours(0, 0, 0, 0); // Normalize to start of day
-                endDate.setHours(0, 0, 0, 0);   // Normalize to start of day
-                const timeDiff = endDate.getTime() - startDate.getTime();
-                daysUntilAppointment = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-                if (daysUntilAppointment < 0) daysUntilAppointment = 0; // Ensure non-negative
-            }
+            resultDiv.innerHTML = '';
 
-            let options = [];
-            const seenOptions = new Set(); // Global set to filter unique options
-
-            console.log(`Weekly Dose: ${weeklyDose}, Allow Half: ${allowHalf}`);
-
-            // --- Generate Uniform Daily Dose options (all 7 days get the same dose) ---
-            const maxDailyDoseForCalc = Math.max(ABSOLUTE_MAX_DAILY_DOSE, weeklyDose / 7 * 1.5); 
-            console.log(`Max daily dose for calculation: ${maxDailyDoseForCalc.toFixed(2)}`);
-
-            for (let dailyDose = 0.5; dailyDose <= maxDailyDoseForCalc; dailyDose += 0.5) {
-                const dailyCombos = findComb(dailyDose, pills, allowHalf, 1, 4); 
-                if (dailyCombos.length > 0) {
-                    dailyCombos.forEach(c => {
-                        const actualWeeklyDose = c.reduce((sum, p) => sum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0) * 7;
-                        if (Math.abs(actualWeeklyDose - weeklyDose) < FLOAT_TOLERANCE) { 
-                            const key = `uniform-${JSON.stringify(c.map(p => `${p.mg}-${p.count}-${p.half}`).sort())}`; 
-                            if (!seenOptions.has(key)) {
-                                seenOptions.add(key);
-                                options.push({
-                                    type: 'uniform',
-                                    days: 7, 
-                                    combo: c,
-                                    weeklyDoseActual: actualWeeklyDose,
-                                    priority: 0 // Assign priority for sorting
-                                });
-                                console.log(`Found Uniform Option: ${actualWeeklyDose.toFixed(1)}mg/week`);
-                            }
-                        }
-                    });
-                }
-            }
-
-
-            // --- Generate Non-uniform Dose options (1, 2, or 3 special days, allow 0mg for special days) ---
-            // Here, "special days" (Sat/Sun/Fri-Sun) get a dose (can be 0mg) which is UNIFORM among themselves.
-            // "Normal days" get baseDose.
-            for (let numSpecialDays = 1; numSpecialDays <= 3; numSpecialDays++) {
-                const normalDaysCount = 7 - numSpecialDays;
-                if (normalDaysCount < 1) continue;
-
-                const specialDaysIndices = getSpecialDaysIndices(numSpecialDays);
-                
-                for (let baseDose = 0.5; baseDose <= ABSOLUTE_MAX_DAILY_DOSE; baseDose += 0.5) { 
-                    const normalDayCombos = findComb(baseDose, pills, allowHalf, 1, 4);
-                    if (normalDayCombos.length === 0) continue;
-
-                    const remainingDoseForSpecialDays = weeklyDose - (baseDose * normalDaysCount);
-
-                    if (remainingDoseForSpecialDays < -FLOAT_TOLERANCE) continue; // Base dose already too high
-
-                    const specialDayDoseTarget = +(remainingDoseForSpecialDays / numSpecialDays).toFixed(2);
-
-                    // Constraints for specialDayDoseTarget:
-                    // 1. Must be non-negative and not exceed ABSOLUTE_MAX_DAILY_DOSE
-                    // 2. If positive, must be different from baseDose AND not exceed DOSE_MULTIPLIER_LIMIT * baseDose
-                    const specialDoseConstraintMet = (specialDayDoseTarget >= -FLOAT_TOLERANCE && specialDayDoseTarget <= ABSOLUTE_MAX_DAILY_DOSE + FLOAT_TOLERANCE) && 
-                                                     (Math.abs(specialDayDoseTarget) < FLOAT_TOLERANCE || // If target is 0, it's valid (and does not need to be different from base)
-                                                      (Math.abs(specialDayDoseTarget - baseDose) > FLOAT_TOLERANCE && // If target > 0, must be different from base
-                                                       specialDayDoseTarget <= baseDose * DOSE_MULTIPLIER_LIMIT + FLOAT_TOLERANCE)); // And within multiplier limit
-
-                    if (!specialDoseConstraintMet) {
-                        continue;
-                    }
-                    
-                    const specialDayCombos = findComb(specialDayDoseTarget, pills, allowHalf, specialDayDoseTarget === 0 ? 0 : 1, 4);
-                    if (specialDayCombos.length === 0) continue; 
-
-                    specialDayCombos.forEach(sCombo => {
-                        normalDayCombos.forEach(nCombo => {
-                            const comboWeekly = Array(7).fill(null); 
-
-                            for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
-                                if (specialDaysIndices.includes(dayIdx)) {
-                                    comboWeekly[dayIdx] = sCombo.slice();
-                                } else {
-                                    comboWeekly[dayIdx] = nCombo.slice();
-                                }
-                            }
-
-                            let currentWeeklyDoseSum = 0;
-                            comboWeekly.forEach(dayCombo => {
-                                if (dayCombo) { 
-                                    currentWeeklyDoseSum += dayCombo.reduce((sum, p) => sum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0);
-                                }
-                            });
-
-                            if (Math.abs(currentWeeklyDoseSum - weeklyDose) < FLOAT_TOLERANCE) { 
-                                const key = `nonuniform-${JSON.stringify(comboWeekly.map(day => day ? day.map(p => `${p.mg}-${p.count}-${p.half}`).sort().join('|') : 'null'))}`;
-                                if (!seenOptions.has(key)) {
-                                    seenOptions.add(key);
-                                    options.push({
-                                        type: 'non-uniform',
-                                        days: 7, 
-                                        comboWeekly: comboWeekly,
-                                        specialDays: specialDaysIndices, 
-                                        baseDose: baseDose,
-                                        specialDose: specialDayDoseTarget,
-                                        weeklyDoseActual: currentWeeklyDoseSum,
-                                        priority: 1 // Assign priority for sorting
-                                    });
-                                    console.log(`Found Non-Uniform Option: ${currentWeeklyDoseSum.toFixed(1)}mg/week`);
-                                }
-                            }
-                        });
-                    });
-                }
-            }
-            
-            // --- Helper function for Flexible Weekend Pattern Generation ---
-            // This generates patterns where a block of weekdays has uniform dose,
-            // and the remaining weekend days (Fri, Sat, Sun or Sat, Sun) can have flexible doses,
-            // but if multiple non-zero weekend days exist, their doses must be equal.
-            function generateFlexibleWeekendPattern(options, seenOptions, weeklyDose, allowHalf, weekdayIndices, weekendIndices, daysName) {
-                const numWeekdays = weekdayIndices.length;
-                const numWeekendDays = weekendIndices.length;
-
-                for (let baseDose = 0.5; baseDose <= ABSOLUTE_MAX_DAILY_DOSE; baseDose += 0.5) {
-                    const baseDoseCombos = findComb(baseDose, pills, allowHalf, 1, 4);
-                    if (baseDoseCombos.length === 0) continue;
-
-                    const doseForWeekdays = baseDose * numWeekdays;
-                    let remainingDoseForWeekend = weeklyDose - doseForWeekdays;
-
-                    if (remainingDoseForWeekend < -FLOAT_TOLERANCE) continue;
-
-                    // SCENARIO 1: All weekend days are 0mg
-                    // This is handled by 'non-uniform' type (e.g., Mon-Thu X mg, Fri-Sun 0 mg). Skip here.
-                    if (Math.abs(remainingDoseForWeekend) < FLOAT_TOLERANCE) {
-                        continue;
-                    }
-
-                    // SCENARIO 2: One weekend day has a dose, others are 0mg
-                    for (let i = 0; i < numWeekendDays; i++) {
-                        const singleDoseTarget = remainingDoseForWeekend; // The entire remaining dose goes to this one day.
-
-                        if (singleDoseTarget <= -FLOAT_TOLERANCE || singleDoseTarget > ABSOLUTE_MAX_DAILY_DOSE + FLOAT_TOLERANCE) continue;
-                        
-                        // Deduplicate: If the single dose is same as baseDose, it's uniform for the week or covered by non-uniform (base vs base)
-                        if (Math.abs(singleDoseTarget - baseDose) < FLOAT_TOLERANCE) continue;
-                        // Check multiplier limit
-                        if (singleDoseTarget > 0 && singleDoseTarget > baseDose * DOSE_MULTIPLIER_LIMIT + FLOAT_TOLERANCE) continue;
-
-                        const singleDoseCombos = findComb(singleDoseTarget, pills, allowHalf, 1, 4);
-                        if (singleDoseCombos.length === 0) continue;
-
-                        const comboWeekly = Array(7).fill(null);
-                        weekdayIndices.forEach(dayIdx => { comboWeekly[dayIdx] = baseDoseCombos[0].slice(); });
-                        comboWeekly[weekendIndices[i]] = singleDoseCombos[0].slice(); // The day with a dose
-                        
-                        // Set other weekend days to 0mg
-                        weekendIndices.filter((_, idx) => idx !== i).forEach(dayIdx => { comboWeekly[dayIdx] = []; });
-
-                        let description = `วันธรรมดา (${numWeekdays} วัน) ${baseDose.toFixed(1)} mg`;
-                        description += `, ${daysName[weekendIndices[i]]} ${singleDoseTarget.toFixed(1)} mg`;
-                        const zeroDaysNames = weekendIndices.filter((_, idx) => idx !== i).map(idx => daysName[idx]);
-                        if (zeroDaysNames.length > 0) {
-                            description += `, หยุดยา (${zeroDaysNames.join(', ')})`;
-                        }
-
-                        const key = `flex-weekend-1dose-${numWeekdays}-${JSON.stringify(comboWeekly.map(day => day ? day.map(p => `${p.mg}-${p.count}-${p.half}`).sort().join('|') : 'null'))}`;
-                        if (!seenOptions.has(key)) {
-                            seenOptions.add(key);
-                            options.push({
-                                type: 'flexible-weekend-pattern',
-                                days: 7,
-                                comboWeekly: comboWeekly,
-                                description: description,
-                                weeklyDoseActual: weeklyDose,
-                                priority: 2 // Priority for patterns with 1 non-zero weekend day
-                            });
-                        }
-                    }
-
-                    // SCENARIO 3: Two weekend days have the SAME dose, 1 is 0mg (only applicable if numWeekendDays >= 2)
-                    if (numWeekendDays >= 2) {
-                        for (let i = 0; i < numWeekendDays; i++) {
-                            for (let j = i + 1; j < numWeekendDays; j++) {
-                                const twoDayDoseTarget = +(remainingDoseForWeekend / 2).toFixed(2); // Average dose for 2 days
-
-                                if (twoDayDoseTarget <= -FLOAT_TOLERANCE || twoDayDoseTarget > ABSOLUTE_MAX_DAILY_DOSE + FLOAT_TOLERANCE) continue;
-                                if (Math.abs(twoDayDoseTarget) < FLOAT_TOLERANCE) continue; // If 0, covered by non-uniform (base, 0, 0)
-
-                                // Deduplicate: If these two doses are same as baseDose, it's uniform.
-                                if (Math.abs(twoDayDoseTarget - baseDose) < FLOAT_TOLERANCE) continue;
-                                // Check multiplier limit
-                                if (twoDayDoseTarget > 0 && twoDayDoseTarget > baseDose * DOSE_MULTIPLIER_LIMIT + FLOAT_TOLERANCE) continue;
-
-                                const twoDayDoseCombos = findComb(twoDayDoseTarget, pills, allowHalf, 1, 4);
-                                if (twoDayDoseCombos.length === 0) continue;
-
-                                const comboWeekly = Array(7).fill(null);
-                                weekdayIndices.forEach(dayIdx => { comboWeekly[dayIdx] = baseDoseCombos[0].slice(); });
-                                comboWeekly[weekendIndices[i]] = twoDayDoseCombos[0].slice();
-                                comboWeekly[weekendIndices[j]] = twoDayDoseCombos[0].slice(); // Both days get the same dose
-
-                                // Set other weekend days (if any) to 0mg
-                                weekendIndices.filter((_, idx) => idx !== i && idx !== j).forEach(dayIdx => { comboWeekly[dayIdx] = []; });
-
-                                let description = `วันธรรมดา (${numWeekdays} วัน) ${baseDose.toFixed(1)} mg`;
-                                description += `, ${daysName[weekendIndices[i]]}-${daysName[weekendIndices[j]]} ${twoDayDoseTarget.toFixed(1)} mg`;
-                                const otherZeroDayNames = weekendIndices.filter((_, idx) => idx !== i && idx !== j).map(idx => daysName[idx]);
-                                if (otherZeroDayNames.length > 0) {
-                                    description += `, หยุดยา (${otherZeroDayNames.join(', ')})`;
-                                }
-
-                                const key = `flex-weekend-2dose-${numWeekdays}-${JSON.stringify(comboWeekly.map(day => day ? day.map(p => `${p.mg}-${p.count}-${p.half}`).sort().join('|') : 'null'))}`;
-                                if (!seenOptions.has(key)) {
-                                    seenOptions.add(key);
-                                    options.push({
-                                        type: 'flexible-weekend-pattern',
-                                        days: 7,
-                                        comboWeekly: comboWeekly,
-                                        description: description,
-                                        weeklyDoseActual: weeklyDose,
-                                        priority: 3 // Priority for patterns with 2 non-zero weekend days
-                                    });
-                                }
-                            }
-                        }
-                    }
-
-                    // SCENARIO 4: All three weekend days have the SAME dose (only applicable if numWeekendDays == 3)
-                    // This is fully covered by 'non-uniform' where specialDoseTarget is non-zero and same. Skip here.
-                    if (numWeekendDays === 3) {
-                         const threeDayDoseTarget = +(remainingDoseForWeekend / 3).toFixed(2);
-                         if (Math.abs(threeDayDoseTarget) > FLOAT_TOLERANCE && Math.abs(threeDayDoseTarget - baseDose) > FLOAT_TOLERANCE) {
-                             // This case is explicitly handled by 'non-uniform'
-                             // (e.g., baseDose Mon-Thu, specialDoseTarget Fri-Sun where specialDoseTarget != baseDose and > 0)
-                             continue;
-                         }
-                    }
-                }
-            }
-
-            // --- Call the helper for the two main flexible weekend patterns ---
-            // Pattern A: Mon-Thu base (4 days), Fri-Sun flexible (3 days)
-            generateFlexibleWeekendPattern(options, seenOptions, weeklyDose, allowHalf, [0, 1, 2, 3], [4, 5, 6], daysName);
-
-            // Pattern B: Mon-Fri base (5 days), Sat-Sun flexible (2 days)
-            generateFlexibleWeekendPattern(options, seenOptions, weeklyDose, allowHalf, [0, 1, 2, 3, 4], [5, 6], daysName);
-
-
-            // Sort options based on defined priorities
-            options.sort((a, b) => {
-                // 0. Sort by explicit priority first (lower value = higher priority)
-                if (a.priority !== undefined && b.priority !== undefined) {
-                    if (a.priority !== b.priority) return a.priority - b.priority;
-                } else if (a.priority !== undefined) { return -1; } // a has priority, b doesn't
-                else if (b.priority !== undefined) { return 1; }  // b has priority, a doesn't
-                
-                // Secondary sorting criteria for same type or no priority defined:
-                
-                // For non-uniform, prioritize fewer 0mg days in special days, then fewer non-zero special days
-                if (a.type === 'non-uniform' && b.type === 'non-uniform') {
-                    const aZeroSpecialDays = (a.specialDays || []).filter(idx => Math.abs(a.comboWeekly[idx].reduce((sum, p) => sum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0)) < FLOAT_TOLERANCE).length;
-                    const bZeroSpecialDays = (b.specialDays || []).filter(idx => Math.abs(b.comboWeekly[idx].reduce((sum, p) => sum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0)) < FLOAT_TOLERANCE).length;
-                    if (aZeroSpecialDays !== bZeroSpecialDays) return aZeroSpecialDays - bZeroSpecialDays;
-
-                    const aNonZeroSpecialDaysCount = (a.specialDays || []).filter(idx => Math.abs(a.comboWeekly[idx].reduce((sum, p) => sum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0)) >= FLOAT_TOLERANCE).length;
-                    const bNonZeroSpecialDaysCount = (b.specialDays || []).filter(idx => Math.abs(b.comboWeekly[idx].reduce((sum, p) => sum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0)) >= FLOAT_TOLERANCE).length;
-                    if (aNonZeroSpecialDaysCount !== bNonZeroSpecialDaysCount) return aNonZeroSpecialDaysCount - bNonZeroSpecialDaysCount;
-                }
-                
-                // Common criteria for all types:
-                const aColors = countPillColors(a);
-                const bColors = countPillColors(b);
-                if (aColors !== bColors) return aColors - bColors;
-
-                const aTotalPills = countTotalPillObjects(a);
-                const bTotalPills = countTotalPillObjects(b);
-                if (aTotalPills !== bTotalPills) return aTotalPills - bTotalPills;
-
-                return countHalves(a) - countHalves(b);
-            });
-
-            console.log(`Total options found: ${options.length}`);
-            if (options.length === 0) {
-                resultDiv.innerHTML = '<div class="text-red-600 text-center font-bold">ไม่พบตัวเลือกที่เหมาะสมสำหรับขนาดยาที่ต้องการ</div>';
-                console.log("No options found after filtering.");
+            if (isNaN(weeklyDose) || weeklyDose < 0) {
+                resultDiv.innerHTML = '<div class="text-red-600 text-center font-bold">กรุณากรอกขนาดยาใหม่ที่ถูกต้อง</div>';
                 return;
             }
 
-            // Display top 30 options
-            options.slice(0, 30).forEach((option, index) => {
-                let totalPills2mg = 0;
-                let totalPills3mg = 0;
-                let totalPills5mg = 0;
-                let halfPillCounts = { 2: 0, 3: 0, 5: 0 };
+            displayPercentageChange();
 
-                if (daysUntilAppointment > 0) {
-                    for (let day = 0; day < daysUntilAppointment; day++) {
-                        const currentDayIndex = day % 7;
-                        let comboForDay;
+            let daysUntilAppointment = 7;
+            let isAppointmentCalculation = false;
+            const appointmentToggle = document.getElementById('appointmentToggle').checked;
 
-                        if (option.type === 'uniform') {
-                            comboForDay = option.combo;
-                        } else if (option.comboWeekly) { // Handles 'non-uniform' and 'flexible-weekend-pattern'
-                            comboForDay = option.comboWeekly[currentDayIndex];
-                        } else {
-                            comboForDay = []; // Fallback, should not happen with defined types
-                        }
+            if (appointmentToggle) {
+                const { daysDiff, isValid } = getAppointmentDays();
+                if (isValid) {
+                    daysUntilAppointment = daysDiff;
+                    isAppointmentCalculation = true;
+                }
+            }
 
-                        if (comboForDay && comboForDay.length > 0) {
-                            comboForDay.forEach(p => {
-                                if (p.half) {
-                                    halfPillCounts[p.mg]++;
-                                } else {
-                                    if (p.mg === 2) totalPills2mg += p.count;
-                                    else if (p.mg === 3) totalPills3mg += p.count;
-                                    else if (p.mg === 5) totalPills5mg += p.count;
+            let options = [];
+            const seenOptions = new Set();
+
+            if (weeklyDose === 0) {
+                options.push({
+                    type: 'zero-dose',
+                    comboWeekly: Array(7).fill([]),
+                    weeklyDoseActual: 0,
+                    priority: -1
+                });
+            } else {
+                // --- Generate Uniform Daily Dose options ---
+                const maxDailyDoseForCalc = Math.max(ABSOLUTE_MAX_DAILY_DOSE, weeklyDose / 7 * 1.5);
+                for (let dailyDose = 0.5; dailyDose <= maxDailyDoseForCalc; dailyDose += 0.5) {
+                    const dailyCombos = findComb(dailyDose, pills, allowHalf, 1, 4);
+                    if (dailyCombos.length > 0) {
+                        dailyCombos.forEach(c => {
+                            const actualWeeklyDose = c.reduce((sum, p) => sum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0) * 7;
+                            if (Math.abs(actualWeeklyDose - weeklyDose) < FLOAT_TOLERANCE) {
+                                const key = `uniform-${JSON.stringify(c.map(p => `${p.mg}-${p.count}-${p.half}`).sort())}`;
+                                if (!seenOptions.has(key)) {
+                                    seenOptions.add(key);
+                                    options.push({ type: 'uniform', combo: c, weeklyDoseActual: actualWeeklyDose, priority: 0 });
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
                 }
 
-                // Consolidate half pills into whole pills for display
-                let finalPills5mg = totalPills5mg + Math.floor(halfPillCounts[5] / 2);
-                let remainingHalf5 = halfPillCounts[5] % 2;
-                let finalPills3mg = totalPills3mg + Math.floor(halfPillCounts[3] / 2);
-                let remainingHalf3 = halfPillCounts[3] % 2;
-                let finalPills2mg = totalPills2mg + Math.floor(halfPillCounts[2] / 2);
-                let remainingHalf2 = halfPillCounts[2] % 2;
+                // --- Generate Non-uniform Dose options ---
+                for (let numSpecialDays = 1; numSpecialDays <= 3; numSpecialDays++) {
+                    const normalDaysCount = 7 - numSpecialDays;
+                    if (normalDaysCount < 1) continue;
+                    const specialDaysIndices = getSpecialDaysIndices(numSpecialDays);
+                    for (let baseDose = 0.5; baseDose <= ABSOLUTE_MAX_DAILY_DOSE; baseDose += 0.5) {
+                        const normalDayCombos = findComb(baseDose, pills, allowHalf, 1, 4);
+                        if (normalDayCombos.length === 0) continue;
+                        const remainingDoseForSpecialDays = weeklyDose - (baseDose * normalDaysCount);
+                        if (remainingDoseForSpecialDays < -FLOAT_TOLERANCE) continue;
+                        const specialDayDoseTarget = +(remainingDoseForSpecialDays / numSpecialDays).toFixed(2);
+                        const specialDoseConstraintMet = (specialDayDoseTarget >= -FLOAT_TOLERANCE && specialDayDoseTarget <= ABSOLUTE_MAX_DAILY_DOSE + FLOAT_TOLERANCE) && (Math.abs(specialDayDoseTarget) < FLOAT_TOLERANCE || (Math.abs(specialDayDoseTarget - baseDose) > FLOAT_TOLERANCE && specialDayDoseTarget <= baseDose * DOSE_MULTIPLIER_LIMIT + FLOAT_TOLERANCE));
+                        if (!specialDoseConstraintMet) continue;
+                        const specialDayCombos = findComb(specialDayDoseTarget, pills, allowHalf, specialDayDoseTarget === 0 ? 0 : 1, 4);
+                        if (specialDayCombos.length === 0) continue;
+                        specialDayCombos.forEach(sCombo => {
+                            normalDayCombos.forEach(nCombo => {
+                                const comboWeekly = Array(7).fill(null);
+                                for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
+                                    comboWeekly[dayIdx] = specialDaysIndices.includes(dayIdx) ? sCombo.slice() : nCombo.slice();
+                                }
+                                let currentWeeklyDoseSum = comboWeekly.reduce((sum, dayCombo) => sum + (dayCombo ? dayCombo.reduce((dSum, p) => dSum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0) : 0), 0);
+                                if (Math.abs(currentWeeklyDoseSum - weeklyDose) < FLOAT_TOLERANCE) {
+                                    const key = `nonuniform-${JSON.stringify(comboWeekly.map(day => day ? day.map(p => `${p.mg}-${p.count}-${p.half}`).sort().join('|') : 'null'))}`;
+                                    if (!seenOptions.has(key)) {
+                                        seenOptions.add(key);
+                                        options.push({ type: 'non-uniform', comboWeekly: comboWeekly, specialDays: specialDaysIndices, baseDose: baseDose, specialDose: specialDayDoseTarget, weeklyDoseActual: currentWeeklyDoseSum, priority: 1 });
+                                    }
+                                }
+                            });
+                        });
+                    }
+                }
+            }
 
+            options.sort((a, b) => {
+                if (a.priority !== b.priority) return a.priority - b.priority;
+                const aColors = countPillColors(a);
+                const bColors = countPillColors(b);
+                if (aColors !== bColors) return aColors - bColors;
+                const aTotalPills = countTotalPillObjects(a);
+                const bTotalPills = countTotalPillObjects(b);
+                if (aTotalPills !== bTotalPills) return aTotalPills - bTotalPills;
+                return countHalves(a) - countHalves(b);
+            });
+
+            if (options.length === 0) {
+                resultDiv.innerHTML = '<div class="text-red-600 text-center font-bold">ไม่พบตัวเลือกที่เหมาะสมสำหรับขนาดยาที่ต้องการ</div>';
+                return;
+            }
+
+            options.slice(0, 30).forEach((option, index) => {
                 let optionHtml = `<div class="border border-gray-200 p-4 rounded-lg bg-gray-50 mb-4 shadow-sm">
                             <div class="font-semibold text-blue-700 mb-2">ตัวเลือก ${index+1}: `;
                 let weeklyDoseActual = option.weeklyDoseActual || 0;
 
-                if (option.type === 'uniform') {
+                if (option.type === 'zero-dose') {
+                    optionHtml += `หยุดยา (รวม 0 mg/สัปดาห์)`;
+                } else if (option.type === 'uniform') {
                     optionHtml += `ทุกวัน วันละ ${option.combo.reduce((sum, p) => sum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0).toFixed(1)} mg`;
                 } else if (option.type === 'non-uniform') {
-                    // Check if special days actually have 0mg doses
                     const zeroDoseSpecialDays = (option.specialDays || []).filter(idx => Math.abs(option.comboWeekly[idx].reduce((sum, p) => sum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0)) < FLOAT_TOLERANCE);
                     const nonZeroSpecialDays = (option.specialDays || []).filter(idx => Math.abs(option.comboWeekly[idx].reduce((sum, p) => sum + (p.half ? p.mg * 0.5 : p.mg * p.count), 0)) >= FLOAT_TOLERANCE);
-
                     let specialDoseDescription = '';
-                    if (nonZeroSpecialDays.length > 0) {
-                        specialDoseDescription += `ขนาดยาวันพิเศษ ${option.specialDose.toFixed(1)} mg (${nonZeroSpecialDays.length} วัน: ${nonZeroSpecialDays.map(idx => daysName[idx]).join(', ')})`;
-                    }
-                    if (zeroDoseSpecialDays.length > 0) {
-                        if (specialDoseDescription) specialDoseDescription += ', ';
-                        specialDoseDescription += `หยุดยา (${zeroDoseSpecialDays.length} วัน: ${zeroDoseSpecialDays.map(idx => daysName[idx]).join(', ')})`;
-                    }
-                    
+                    if (nonZeroSpecialDays.length > 0) specialDoseDescription += `ขนาดยาวันพิเศษ ${option.specialDose.toFixed(1)} mg (${nonZeroSpecialDays.map(idx => daysName[idx]).join(', ')})`;
+                    if (zeroDoseSpecialDays.length > 0) specialDoseDescription += `${specialDoseDescription ? ', ' : ''}หยุดยา (${zeroDoseSpecialDays.map(idx => daysName[idx]).join(', ')})`;
                     optionHtml += `วันธรรมดา ${option.baseDose.toFixed(1)} mg, ${specialDoseDescription}`;
-
-                } else if (option.type === 'flexible-weekend-pattern') { 
-                    optionHtml += `${option.description}`;
                 }
                 optionHtml += ` (รวม ${weeklyDoseActual.toFixed(1)} mg/สัปดาห์)</div>`;
 
                 optionHtml += `<div class="grid grid-cols-7 gap-2 mt-4">`;
                 for (let j = 0; j < 7; j++) {
-                    const combo = option.comboWeekly ? option.comboWeekly[j] : option.combo;
+                    const combo = option.comboWeekly ? option.comboWeekly[j] : (option.combo || []);
                     optionHtml += renderDay(j, combo);
                 }
                 optionHtml += `</div>`;
 
-                if (daysUntilAppointment > 0) {
-                    optionHtml += `<div class="mt-4 text-sm border-t border-gray-200 pt-2 text-gray-700">
-                                <span class="font-bold">รวมยาถึงวันนัด (${daysUntilAppointment} วัน):</span><br>`;
-                    let pillsNeededMessage = '';
-                    if (finalPills5mg > 0) pillsNeededMessage += `<span class="pill pill-5"></span> 5mg: ${finalPills5mg} เม็ด<br>`;
-                    if (remainingHalf5 > 0) pillsNeededMessage += `<span class="pill pill-5 pill-half-left"></span> 5mg: ${remainingHalf5} ครึ่งเม็ด<br>`;
-                    if (finalPills3mg > 0) pillsNeededMessage += `<span class="pill pill-3"></span> 3mg: ${finalPills3mg} เม็ด<br>`;
-                    if (remainingHalf3 > 0) pillsNeededMessage += `<span class="pill pill-3 pill-half-left"></span> 3mg: ${remainingHalf3} ครึ่งเม็ด<br>`;
-                    if (finalPills2mg > 0) pillsNeededMessage += `<span class="pill pill-2"></span> 2mg: ${finalPills2mg} เม็ด<br>`;
-                    if (remainingHalf2 > 0) pillsNeededMessage += `<span class="pill pill-2 pill-half-left"></span> 2mg: ${remainingHalf2} ครึ่งเม็ด<br>`;
+                let totalPillsHeader = isAppointmentCalculation ? `รวมยาถึงวันนัด (${daysUntilAppointment} วัน):` : 'รวมยาสำหรับ 1 สัปดาห์:';
+                optionHtml += `<div class="mt-4 text-sm border-t border-gray-200 pt-2 text-gray-700">
+                                <span class="font-bold">${totalPillsHeader}</span><br>`;
+                
+                let pillsNeededMessage = '';
+                if (option.type === 'zero-dose') {
+                    pillsNeededMessage = '<span>ไม่ต้องจ่ายยา</span>';
+                } else {
+                    let halfPillCounts = { 2: 0, 3: 0, 5: 0 };
+                    let wholePillCounts = { 2: 0, 3: 0, 5: 0 };
 
-                    if (pillsNeededMessage === '') {
-                        if (weeklyDose === 0) {
-                            optionHtml += '<span>ไม่มีขนาดยาที่ต้องจ่าย (เป้าหมายคือ 0 mg/สัปดาห์)</span>';
-                        } else {
-                             optionHtml += '<span>ไม่มียาที่ต้องจ่ายสำหรับช่วงเวลานี้ (อาจต้องตรวจสอบการคำนวณ)</span>';
+                    for (let day = 0; day < daysUntilAppointment; day++) {
+                        const currentDayIndex = day % 7;
+                        const comboForDay = option.comboWeekly ? option.comboWeekly[currentDayIndex] : option.combo;
+                        if (comboForDay) {
+                            comboForDay.forEach(p => {
+                                if (p.half) halfPillCounts[p.mg]++;
+                                else wholePillCounts[p.mg] += p.count;
+                            });
                         }
-                    } else {
-                        optionHtml += pillsNeededMessage;
                     }
-                    optionHtml += `</div>`;
+
+                    [5, 3, 2].forEach(mg => {
+                        const wholePills = wholePillCounts[mg] + Math.floor(halfPillCounts[mg] / 2);
+                        const remainingHalves = halfPillCounts[mg] % 2;
+                        const actualUsed = wholePills + remainingHalves * 0.5;
+                        const dispensedPills = wholePills + remainingHalves;
+
+                        if (dispensedPills > 0) {
+                            pillsNeededMessage += `<span class="pill pill-${mg}"></span> ${mg}mg: ${dispensedPills} เม็ด`;
+                            if (remainingHalves > 0) {
+                                pillsNeededMessage += ` (ใช้จริง ${actualUsed.toFixed(1)} เม็ด)`;
+                            }
+                            pillsNeededMessage += `<br>`;
+                        }
+                    });
                 }
-                optionHtml += `</div>`;
+
+                if (pillsNeededMessage === '') pillsNeededMessage = '<span>ไม่ต้องจ่ายยา</span>';
+                optionHtml += pillsNeededMessage;
+                optionHtml += `</div></div>`;
                 resultDiv.innerHTML += optionHtml;
             });
-            console.log("--- Finished generateSuggestions ---");
         }
 
-        /**
-         * Renders the pill combination for a single day.
-         * @param {number} idx - Day index (0-6).
-         * @param {Array<Object>} combo - Array of pill objects for the day. Can be empty for 0mg.
-         * @returns {string} HTML string for the day's pill display.
-         */
         function renderDay(idx, combo) {
             let visualPills = '', textPills = '', dayDose = 0;
             if (!combo || combo.length === 0) {
@@ -583,9 +355,7 @@
                     visualPills += `<span class="pill pill-${p.mg} pill-half-left"></span>`;
                     textPills += `<div class="text-xs text-gray-600">${p.mg}mg (ครึ่ง)</div>`;
                 } else {
-                    for (let k = 0; k < p.count; k++) {
-                        visualPills += `<span class="pill pill-${p.mg}"></span>`;
-                    }
+                    for (let k = 0; k < p.count; k++) visualPills += `<span class="pill pill-${p.mg}"></span>`;
                     if (p.count > 0) textPills += `<div class="text-xs text-gray-600">${p.mg}mg x${p.count}</div>`;
                 }
             });
@@ -595,75 +365,39 @@
                     </div>`;
         }
 
-        /**
-         * Finds combinations of pills (whole and half) that sum up to the target dose.
-         * @param {number} target - The target dose for the combination.
-         * @param {Array<number>} availablePills - Array of available pill strengths (e.g., [5, 3, 2]).
-         * @param {boolean} allowHalf - Whether half pills are allowed.
-         * @param {number} minPillObjects - Minimum total physical pill objects.
-         * @param {number} maxPillObjects - Maximum total physical pill objects.
-         * @returns {Array<Array<Object>>} An array of valid pill combinations, sorted by preference.
-         */
         function findComb(target, availablePills, allowHalf, minPillObjects, maxPillObjects) {
             const resultCombos = [];
             const seenCombinations = new Set();
-
-            const pill5mg = availablePills[0];
-            const pill3mg = availablePills[1];
-            const pill2mg = availablePills[2];
-
-            // If target is 0 and 0 pills are allowed, return empty combo
-            if (Math.abs(target) < FLOAT_TOLERANCE && minPillObjects === 0) { 
-                return [[]]; 
-            }
-            // If target is 0 but minPillObjects > 0, no valid combination
-            if (Math.abs(target) < FLOAT_TOLERANCE && minPillObjects > 0) {
-                return [];
-            }
-
-
-            // Iterate through all possible counts of whole pills
-            for (let count5mg = 0; count5mg <= maxPillObjects; count5mg++) {
-                for (let count3mg = 0; count3mg <= maxPillObjects - count5mg; count3mg++) { 
-                    for (let count2mg = 0; count2mg <= maxPillObjects - count5mg - count3mg; count2mg++) { 
-                        let currentDose = count5mg * pill5mg + count3mg * pill3mg + count2mg * pill2mg;
-                        let currentTotalObjects = count5mg + count3mg + count2mg;
-
-                        // Check combination with whole pills only
-                        if (Math.abs(currentDose - target) < FLOAT_TOLERANCE) { 
-                            if (currentTotalObjects >= minPillObjects && currentTotalObjects <= maxPillObjects) {
-                                let combo = [];
-                                if (count5mg > 0) combo.push({ mg: pill5mg, count: count5mg, half: false });
-                                if (count3mg > 0) combo.push({ mg: pill3mg, count: count3mg, half: false });
-                                if (count2mg > 0) combo.push({ mg: pill2mg, count: count2mg, half: false });
-                                combo.sort((a, b) => b.mg - a.mg); 
-                                const key = JSON.stringify(combo.map(p => `${p.mg}x${p.count}h${p.half}`)); 
-                                if (!seenCombinations.has(key)) {
-                                    seenCombinations.add(key);
-                                    resultCombos.push(combo);
-                                }
+            if (Math.abs(target) < FLOAT_TOLERANCE && minPillObjects === 0) return [[]];
+            if (Math.abs(target) < FLOAT_TOLERANCE && minPillObjects > 0) return [];
+            
+            for (let c5 = 0; c5 <= maxPillObjects; c5++) {
+                for (let c3 = 0; c3 <= maxPillObjects - c5; c3++) {
+                    for (let c2 = 0; c2 <= maxPillObjects - c5 - c3; c2++) {
+                        let currentDose = c5 * 5 + c3 * 3 + c2 * 2;
+                        let currentObjects = c5 + c3 + c2;
+                        if (Math.abs(currentDose - target) < FLOAT_TOLERANCE && currentObjects >= minPillObjects && currentObjects <= maxPillObjects) {
+                            let combo = [];
+                            if (c5 > 0) combo.push({ mg: 5, count: c5, half: false });
+                            if (c3 > 0) combo.push({ mg: 3, count: c3, half: false });
+                            if (c2 > 0) combo.push({ mg: 2, count: c2, half: false });
+                            const key = JSON.stringify(combo.sort((a, b) => b.mg - a.mg));
+                            if (!seenCombinations.has(key)) {
+                                seenCombinations.add(key);
+                                resultCombos.push(combo);
                             }
                         }
-
-                        // Try adding one half pill if allowed and there's space for one more object
-                        if (allowHalf && currentTotalObjects < maxPillObjects) {
+                        if (allowHalf && currentObjects < maxPillObjects) {
                             for (const pillToHalf of availablePills) {
-                                if (Math.abs(currentDose + pillToHalf * 0.5 - target) < FLOAT_TOLERANCE) { 
+                                if (Math.abs(currentDose + pillToHalf * 0.5 - target) < FLOAT_TOLERANCE) {
                                     let comboWithHalf = [];
-                                    // Add existing whole pills
-                                    if (count5mg > 0) comboWithHalf.push({ mg: pill5mg, count: count5mg, half: false });
-                                    if (count3mg > 0) comboWithHalf.push({ mg: pill3mg, count: count3mg, half: false });
-                                    if (count2mg > 0) comboWithHalf.push({ mg: pill2mg, count: count2mg, half: false });
-
-                                    // Add the half pill (count: 1 indicates one physical half-pill object)
+                                    if (c5 > 0) comboWithHalf.push({ mg: 5, count: c5, half: false });
+                                    if (c3 > 0) comboWithHalf.push({ mg: 3, count: c3, half: false });
+                                    if (c2 > 0) comboWithHalf.push({ mg: 2, count: c2, half: false });
                                     comboWithHalf.push({ mg: pillToHalf, count: 1, half: true });
-
-                                    // Check if this new combo (with the half pill) meets min/max object count
-                                    const comboWithHalfTotalObjects = comboWithHalf.reduce((sum, p) => sum + (p.half ? 1 : p.count), 0);
-                                    if (comboWithHalfTotalObjects >= minPillObjects && comboWithHalfTotalObjects <= maxPillObjects) {
-                                        // Sort for consistent key generation
-                                        comboWithHalf.sort((a, b) => b.mg - a.mg || (a.half ? 1 : 0) - (b.half ? 1 : 0));
-                                        const key = JSON.stringify(comboWithHalf.map(p => `${p.mg}x${p.count}h${p.half}`));
+                                    const totalObjects = comboWithHalf.reduce((s, p) => s + p.count, 0);
+                                    if (totalObjects >= minPillObjects && totalObjects <= maxPillObjects) {
+                                        const key = JSON.stringify(comboWithHalf.sort((a, b) => b.mg - a.mg || (a.half ? 1 : 0) - (b.half ? 1 : 0)));
                                         if (!seenCombinations.has(key)) {
                                             seenCombinations.add(key);
                                             resultCombos.push(comboWithHalf);
@@ -675,174 +409,111 @@
                     }
                 }
             }
-
-            // Sort the found combinations within findComb to prioritize simpler ones
-            resultCombos.sort((a, b) => {
-                const aObjects = a.reduce((sum, p) => sum + (p.half ? 1 : p.count), 0);
-                const bObjects = b.reduce((sum, p) => sum + (p.half ? 1 : p.count), 0);
-                if (aObjects !== bObjects) return aObjects - bObjects; // Prioritize fewer physical objects
-
-                const aHalves = a.filter(p => p.half).length;
-                const bHalves = b.filter(p => p.half).length;
-                if (aHalves !== bHalves) return aHalves - bHalves; // Then prioritize fewer half pills
-
-                // Finally, for consistency, sort by pill mg (descending)
-                const aPillOrder = a.map(p => p.mg).sort((x, y) => y - x).join('');
-                const bPillOrder = b.map(p => b.mg).sort((x, y) => y - x).join('');
-                return aPillOrder.localeCompare(bPillOrder);
-            });
-
-            return resultCombos;
+            return resultCombos.sort((a, b) => a.reduce((s, p) => s + p.count, 0) - b.reduce((s, p) => s + p.count, 0) || a.filter(p => p.half).length - b.filter(p => p.half).length);
         }
 
-        /**
-         * Counts the total number of physical half-pill objects in a weekly regimen.
-         * @param {Object} o - Option object (uniform or non-uniform).
-         * @returns {number} Total count of half-pill objects.
-         */
         function countHalves(o) {
-            let halves = 0;
-            const combosToScan = o.type === 'uniform' ? (o.combo ? [o.combo] : []) : (o.comboWeekly || []);
-            
-            combosToScan.forEach(dailyCombo => {
-                if(dailyCombo) {
-                    dailyCombo.forEach(p => {
-                        if (p.half) halves++;
-                    });
-                }
-            });
-            // For uniform types, the daily half-pill count needs to be multiplied by 7 (full week cycle)
-            // as this function is used for sorting overall preference.
-            if (o.type === 'uniform') {
-                return (o.combo ? o.combo.filter(p => p.half).length : 0) * 7;
-            }
-            return halves; // For non-uniform, this is the total for the week.
+            if (!o.combo && !o.comboWeekly) return 0;
+            const combosToScan = o.type === 'uniform' ? [o.combo] : (o.comboWeekly || []);
+            let halves = combosToScan.reduce((sum, day) => sum + (day ? day.filter(p => p.half).length : 0), 0);
+            return o.type === 'uniform' ? halves * 7 : halves;
         }
 
-        /**
-         * Counts the number of distinct pill strengths (colors) used in a weekly regimen.
-         * @param {Object} o - Option object (uniform or non-uniform).
-         * @returns {number} Number of distinct pill strengths.
-         */
         function countPillColors(o) {
+            if (!o.combo && !o.comboWeekly) return 0;
             const colors = new Set();
-            const combosToScan = o.type === 'uniform' ? (o.combo ? [o.combo] : []) : (o.comboWeekly || []);
-            
-            combosToScan.forEach(dailyCombo => {
-                if (dailyCombo) {
-                    dailyCombo.forEach(p => {
-                        if (p.count > 0 || p.half) {
-                            colors.add(p.mg);
-                        }
-                    });
-                }
-            });
+            const combosToScan = o.type === 'uniform' ? [o.combo] : (o.comboWeekly || []);
+            combosToScan.forEach(day => day && day.forEach(p => (p.count > 0 || p.half) && colors.add(p.mg)));
             return colors.size;
         }
         
-        /**
-         * Counts the total number of physical pill objects (whole and half) in a weekly regimen.
-         * @param {Object} o - Option object (uniform or non-uniform).
-         * @returns {number} Total count of physical pill objects.
-         */
         function countTotalPillObjects(o) {
-            let totalObjects = 0;
-            const dailyPillObjects = (dailyCombo) => {
-                let count = 0;
-                if(dailyCombo){
-                    dailyCombo.forEach(p => {
-                        count += p.count; // Add count for whole pills
-                        if (p.half) count += 1; // Add 1 for a physical half-pill object
-                    });
-                }
-                return count;
-            };
-
-            if (o.type === 'uniform') {
-                if(o.combo){
-                    totalObjects = dailyPillObjects(o.combo) * 7; // Multiply by 7 for a full week cycle
-                }
-            } else { // non-uniform or flexible-weekend-pattern
-                if(o.comboWeekly){
-                    o.comboWeekly.forEach(dayCombo => {
-                        totalObjects += dailyPillObjects(dayCombo);
-                    });
-                }
-            }
-            return totalObjects;
+            if (!o.combo && !o.comboWeekly) return 0;
+            const dailyPillObjects = (day) => day ? day.reduce((s, p) => s + (p.half ? 1 : p.count), 0) : 0;
+            if (o.type === 'uniform') return dailyPillObjects(o.combo) * 7;
+            return (o.comboWeekly || []).reduce((s, day) => s + dailyPillObjects(day), 0);
         }
 
-        /**
-         * Returns an array of day indices (0-6, Mon-Sun) for special dose days.
-         * @param {number} numSpecialDays - Number of special days (1, 2, or 3).
-         * @returns {Array<number>} Array of day indices.
-         */
-        function getSpecialDaysIndices(numSpecialDays) {
-            // Monday = 0, Sunday = 6 based on daysName array.
-            switch (numSpecialDays) {
-                case 1: return [daysName.indexOf('อา.')]; // Sunday
-                case 2: return [daysName.indexOf('ส.'), daysName.indexOf('อา.')]; // Sat, Sun
-                case 3: return [daysName.indexOf('ศ.'), daysName.indexOf('ส.'), daysName.indexOf('อา.')]; // Fri, Sat, Sun
-                default: return [];
-            }
+        function getSpecialDaysIndices(num) {
+            if (num === 1) return [6]; // Sun
+            if (num === 2) return [5, 6]; // Sat, Sun
+            if (num === 3) return [4, 5, 6]; // Fri, Sat, Sun
+            return [];
         }
 
-        /**
-         * Calculates and displays the number of days between two selected dates.
-         */
-        function calculateDaysBetweenDates() {
+        function getAppointmentDays() {
             const startDateInput = document.getElementById('startDate').value;
             const endDateInput = document.getElementById('endDate').value;
-            const daysResultDiv = document.getElementById('daysResult');
-
+            
             if (!startDateInput || !endDateInput) {
-                daysResultDiv.textContent = 'กรุณาเลือกวันที่เริ่มต้นและวันนัด';
-                return;
+                return { daysDiff: 0, isValid: false };
             }
 
             const startDate = new Date(startDateInput);
             const endDate = new Date(endDateInput);
-
-            startDate.setHours(0, 0, 0, 0); // Normalize to start of day
-            endDate.setHours(0, 0, 0, 0);   // Normalize to start of day
+            startDate.setHours(0, 0, 0, 0);
+            endDate.setHours(0, 0, 0, 0);
 
             const timeDiff = endDate.getTime() - startDate.getTime();
-            const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Round up to include partial days
+            const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
             if (daysDiff < 0) {
-                daysResultDiv.textContent = 'วันนัดต้องเป็นวันหลังจากวันที่ปัจจุบัน';
+                return { daysDiff: 0, isValid: false };
             } else {
-                daysResultDiv.textContent = `จำนวนวัน: ${daysDiff} วัน`;
+                return { daysDiff: daysDiff, isValid: true };
+            }
+        }
+        
+        function updateAppointmentDaysDisplay() {
+            const daysResultDiv = document.getElementById('daysResult');
+            const { daysDiff, isValid } = getAppointmentDays();
+
+            if (isValid) {
+                 daysResultDiv.textContent = `คำนวณสำหรับ ${daysDiff} วัน`;
+            } else {
+                const startDateInput = document.getElementById('startDate').value;
+                const endDateInput = document.getElementById('endDate').value;
+                if(startDateInput && endDateInput) {
+                    daysResultDiv.textContent = 'วันนัดต้องเป็นวันหลังจากวันที่ปัจจุบัน';
+                } else {
+                    daysResultDiv.textContent = '';
+                }
             }
         }
 
-        // Event Listeners and Initial Setup
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('previousDoseInput').addEventListener('input', generateDoseAdjustmentTable);
-            document.getElementById('weeklyDoseInput').addEventListener('input', () => {
-                // Clear suggestions when weekly dose changes until "Show Options" is clicked again
-                document.getElementById('result').innerHTML = '';
-                document.getElementById('percentageChange').innerHTML = '';
+            const appointmentToggle = document.getElementById('appointmentToggle');
+            const appointmentFields = document.getElementById('appointmentFields');
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+            const weeklyDoseInput = document.getElementById('weeklyDoseInput');
+            const previousDoseInput = document.getElementById('previousDoseInput');
+            const resultDiv = document.getElementById('result');
+
+            previousDoseInput.addEventListener('input', () => {
+                generateDoseAdjustmentTable();
+                displayPercentageChange();
             });
-            document.getElementById('allowHalf').addEventListener('change', () => {
-                // Clear suggestions when allowHalf changes
-                document.getElementById('result').innerHTML = '';
-                document.getElementById('percentageChange').innerHTML = '';
-            });
+            weeklyDoseInput.addEventListener('input', displayPercentageChange);
             document.getElementById('showBtn').addEventListener('click', generateSuggestions);
-            document.getElementById('calculateDaysBtn').addEventListener('click', calculateDaysBetweenDates);
+            
+            appointmentToggle.addEventListener('change', () => {
+                appointmentFields.classList.toggle('hidden');
+                if (!appointmentToggle.checked) {
+                    startDateInput.value = '';
+                    endDateInput.value = '';
+                    document.getElementById('daysResult').textContent = '';
+                } else {
+                    startDateInput.valueAsDate = new Date();
+                }
+                // If results are already shown, regenerate them with new setting
+                if(resultDiv.innerHTML !== ''){
+                    generateSuggestions();
+                }
+            });
 
-            // Set default dates
-            const today = new Date();
-            const defaultEndDate = new Date();
-            defaultEndDate.setDate(today.getDate() + 28 * 3); // Default to ~3 months for appointment
-
-            document.getElementById('startDate').valueAsDate = today;
-            document.getElementById('endDate').valueAsDate = defaultEndDate;
-
-            // Perform initial calculations for default values
-            calculateDaysBetweenDates();
-            generateDoseAdjustmentTable();
+            startDateInput.addEventListener('input', updateAppointmentDaysDisplay);
+            endDateInput.addEventListener('input', updateAppointmentDaysDisplay);
         });
     </script>
 </body>
